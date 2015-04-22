@@ -122,8 +122,9 @@ package cn.chinuy.net.loader {
 			eventFlag( false );
 			onFeedback();
 			_valid = true;
-			onGet( e );
-			dispatchEvent( e );
+			var s : Boolean = onGet( e );
+			if( s )
+				dispatchEvent( e );
 		}
 		
 		private function eventFlag( flag : Boolean ) : void {
@@ -147,7 +148,8 @@ package cn.chinuy.net.loader {
 		protected function toUnload() : void {
 		}
 		
-		protected function onGet( e : Event ) : void {
+		protected function onGet( e : Event ) : Boolean {
+			return true;
 		}
 		
 		protected function onGetError( e : Event ) : void {
