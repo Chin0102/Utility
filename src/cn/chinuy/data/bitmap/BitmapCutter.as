@@ -9,6 +9,7 @@ package cn.chinuy.data.bitmap {
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.net.URLRequest;
+	import flash.system.LoaderContext;
 	
 	/**
 	 * @author chin
@@ -18,6 +19,7 @@ package cn.chinuy.data.bitmap {
 		
 		private var w : int;
 		private var h : int;
+		protected var loaderContext : LoaderContext = new LoaderContext( true );
 		protected var _loader : Loader;
 		protected var _bitmap : Bitmap;
 		protected var _data : Array;
@@ -52,7 +54,7 @@ package cn.chinuy.data.bitmap {
 		
 		override protected function toLoad( request : URLRequest ) : void {
 			_data = [];
-			_loader.load( request );
+			_loader.load( request, loaderContext );
 		}
 		
 		override protected function toUnload() : void {
