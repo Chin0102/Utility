@@ -185,13 +185,13 @@ package cn.chinuy.net.file {
 			if( loaded == 0 ) {
 				progress = averageSpeed = speed = 0;
 				startTime = getTimer();
-				remainingTime = -1;
+				remainingTime = NaN;
 			} else {
 				shortArray.push( loaded - tempLoaded );
-				speed = shortArray.total / shortArray.length;
+				speed = int( shortArray.total / shortArray.length );
 				var time : Number = getTimer() - startTime;
 				averageSpeed = time == 0 ? 0 : loaded / ( time / 1000 );
-				remainingTime = averageSpeed == 0 ? -1 : ( size - loaded ) / averageSpeed;
+				remainingTime = averageSpeed == 0 ? NaN : Math.ceil(( size - loaded ) / averageSpeed );
 				progress = Math.floor( loaded / size * 100 );
 			}
 			tempLoaded = loaded;
