@@ -56,11 +56,12 @@ package cn.chinuy.net.file {
 			var ft : String = file.type;
 			if( isNull( ft ))
 				ft = file.name;
-			ft = extension( ft );
+			ft = ft.split( " " ).join( "" );
+			ft = ft.indexOf( "." ) == -1 ? ft.toLowerCase() : extension( ft );
 			for( var i : int = 0; i < _fileFilters.length; i++ ) {
 				var typeArr : Array = String( FileFilter( _fileFilters[ i ]).extension ).split( ";" );
 				for( var j : int = 0; j < typeArr.length; j++ ) {
-					var type : String = String( typeArr[ j ]).slice( 2 ).toLocaleLowerCase();
+					var type : String = String( typeArr[ j ]).slice( 2 ).toLowerCase();
 					if( type == ft )
 						return true;
 				}
@@ -88,7 +89,8 @@ package cn.chinuy.net.file {
 					_files.splice( i, 1 );
 				}
 			}
-			dispatchEvent( new FileEvent( FileEvent.Select, _files ));
+			if( _files.length > 0 )
+				dispatchEvent( new FileEvent( FileEvent.Select, _files ));
 		}
 	}
 }
