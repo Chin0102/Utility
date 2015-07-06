@@ -9,23 +9,10 @@ package cn.chinuy.data.url {
 	 * @author Chin
 	 */
 	public class RequestURL {
-		public static function parseParam( paramStr : String ) : Object {
-			var obj : Object = {};
-			if( !isNull( paramStr )) {
-				var arr : Array = paramStr.split( "&" );
-				var len : int = arr.length;
-				for( var i : int; i < len; i++ ) {
-					var keyValue : Array = String( arr[ i ]).split( "=" );
-					obj[ keyValue[ 0 ]] = keyValue[ 1 ];
-				}
-			}
-			return obj;
-		}
 		
-		protected var _url : String = "";
 		protected var _pureUrl : String = "";
-		protected var _paramStr : String = "";
-		protected var _paramObj : Object = {};
+		protected var _paramKeys : Array;
+		protected var _paramValues : Array;
 		
 		public function RequestURL( url : String ) {
 			value = url;
@@ -34,30 +21,59 @@ package cn.chinuy.data.url {
 		public function set value( url : String ) : void {
 			if( isNull( url ))
 				return;
-			_url = url;
-			var arr : Array = _url.split( "?" );
+			_paramKeys = [];
+			_paramValues = [];
+			if( url.indexOf( "?" ) == -1 ) {
+				_pureUrl = url;
+				return;
+			}
+			var arr : Array = url.split( "?" );
 			_pureUrl = arr.shift();
-			_paramStr = arr.join( "&" );
-			_paramObj = parseParam( _paramStr );
+			arr = arr.join( "&" ).split( "&" );
+			for( var i : int = 0; i < arr.length; i++ ) {
+				var kv : Array = String( arr[ i ]).split( "=" );
+				_paramKeys.push( kv[ 0 ]);
+				_paramValues.push( kv[ 1 ]);
+			}
 		}
 		
 		public function addParam( key : String, value : *, escape : Boolean = true ) : void {
+			setParam( key, value, escape );
+		}
+		
+		public function setParam( key : String, value : *, escape : Boolean = true ) : void {
 			if( isNull( key ))
 				return;
 			if( escape )
 				value = as2_escape( value );
-			_paramObj[ key ] = value;
-			if( _paramStr != "" )
-				_paramStr += "&";
-			_paramStr += key + "=" + value;
-			_url = _pureUrl + "?" + _paramStr;
+			var i : int = _paramKeys.indexOf( key );
+			if( i == -1 ) {
+				_paramKeys.push( key );
+				_paramValues.push( value );
+			} else {
+				_paramKeys[ i ] = key;
+				_paramValues[ i ] = value;
+			}
+		}
+		
+		public function addParams( ps : String ) : void {
+			var arr : Array = ps.split( "&" );
+			var len : int = arr.length;
+			for( var i : int = 0; i < len; i++ ) {
+				var kv : Array = String( arr[ i ]).split( "=" );
+				setParam( kv[ 0 ], kv[ 1 ]);
+			}
 		}
 		
 		/**
 		 * 完整URL
 		 */
 		public function toString() : String {
-			return _url;
+			var s : String = pureUrl;
+			var p : String = paramStr;
+			if( p != "" )
+				s += "?" + paramStr;
+			return s;
 		}
 		
 		/**
@@ -71,18 +87,37 @@ package cn.chinuy.data.url {
 		 * 字符串形式参数( a=1&b=2&c=3 )
 		 */
 		public function get paramStr() : String {
-			return _paramStr;
+			if( _paramKeys ) {
+				var len : int = _paramKeys.length;
+				if( len > 0 ) {
+					var arr : Array = [];
+					for( var i : int = 0; i < len; i++ ) {
+						arr.push( _paramKeys[ i ] + "=" + _paramValues[ i ]);
+					}
+					return arr.join( "&" );
+				}
+			}
+			return "";
 		}
 		
 		/**
 		 * 对象形式参数( {a:1,b:2,c:3} )
 		 */
 		public function get paramObj() : Object {
-			return _paramObj;
+			var obj : Object = {};
+			if( _paramKeys ) {
+				var len : int = _paramKeys.length;
+				if( len > 0 ) {
+					for( var i : int = 0; i < len; i++ ) {
+						obj[ _paramKeys[ i ]] = _paramValues[ i ];
+					}
+				}
+			}
+			return obj;
 		}
 		
 		public function send() : void {
-			sendToURL( new URLRequest( _url ));
+			sendToURL( new URLRequest( toString()));
 		}
 	}
 }
