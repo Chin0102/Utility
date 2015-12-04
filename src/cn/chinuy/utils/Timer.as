@@ -45,6 +45,7 @@ package cn.chinuy.utils {
 		public function start() : void {
 			if( !running ) {
 				_running = true;
+				_currentCount = 0;
 				time = getTimer();
 				intervalId = setInterval( onTransition, delay );
 			}
@@ -78,7 +79,6 @@ package cn.chinuy.utils {
 				_running = false;
 				clearInterval( intervalId );
 				intervalId = -1;
-				_currentCount = 0;
 			}
 		}
 		
@@ -97,9 +97,9 @@ package cn.chinuy.utils {
 				offset = 0;
 				intervalId = setInterval( onTransition, delay );
 			}
-			dispatchEvent( new TimerEvent( TimerEvent.TIMER ));
 			time = t;
 			_currentCount++;
+			dispatchEvent( new TimerEvent( TimerEvent.TIMER ));
 			if( repeatCount > 0 ) {
 				repeatCount--;
 				if( repeatCount <= 0 ) {

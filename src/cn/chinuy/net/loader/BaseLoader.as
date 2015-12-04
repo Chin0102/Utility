@@ -121,10 +121,11 @@ package cn.chinuy.net.loader {
 		protected function onComplete( e : Event ) : void {
 			eventFlag( false );
 			onFeedback();
-			_valid = true;
 			var s : Boolean = onGet( e );
-			if( s )
+			if( s ) {
+				_valid = true;
 				dispatchEvent( e );
+			}
 		}
 		
 		private function eventFlag( flag : Boolean ) : void {
