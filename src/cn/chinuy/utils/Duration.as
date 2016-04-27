@@ -15,7 +15,7 @@ package cn.chinuy.utils {
 		
 		private var _startTime : int;
 		private var _startPosition : int;
-		private var _value : int;
+		private var _value : Number;
 		
 		private var _running : Boolean;
 		private var _paused : Boolean;
@@ -25,7 +25,7 @@ package cn.chinuy.utils {
 		
 		private var intervalId : int = -1;
 		
-		public function Duration( value : int = 0 ) {
+		public function Duration( value : Number = 0 ) {
 			super();
 			this.value = value;
 		}
@@ -42,7 +42,7 @@ package cn.chinuy.utils {
 			return _running;
 		}
 		
-		public function set value( value : int ) : void {
+		public function set value( value : Number ) : void {
 			_value = value;
 			if( running ) {
 				pause();
@@ -50,11 +50,11 @@ package cn.chinuy.utils {
 			}
 		}
 		
-		public function get value() : int {
+		public function get value() : Number {
 			return _value;
 		}
 		
-		public function get position() : int {
+		public function get position() : Number {
 			if( finished ) {
 				return value;
 			} else if( running ) {
@@ -68,7 +68,7 @@ package cn.chinuy.utils {
 			}
 		}
 		
-		public function get countdown() : int {
+		public function get countdown() : Number {
 			return value - position;
 		}
 		
@@ -77,20 +77,18 @@ package cn.chinuy.utils {
 				_startTime = getTimer();
 				_startPosition = 0;
 				
-				var cd : int = countdown;
-				
 				_finished = _paused = false;
 				_running = true;
 				
 				if( value > 0 ) {
-					intervalId = setInterval( finish, cd );
+					listenFinish();
 				} else {
 					finish();
 				}
 			}
 		}
 		
-		public function seek( position : int, finishSeek : * = null ) : void {
+		public function seek( position : Number, finishSeek : * = null ) : void {
 			if( running ) {
 				if( finishSeek == null ) {
 					_playStatusBeforeSeek = paused;
@@ -121,7 +119,6 @@ package cn.chinuy.utils {
 		
 		public function pause() : void {
 			if( running && !paused ) {
-//				_startTime = getTimer();
 				_startPosition = position;
 				clearInterval( intervalId );
 				_paused = true;
@@ -131,8 +128,7 @@ package cn.chinuy.utils {
 		public function resume() : void {
 			if( running && paused ) {
 				_startTime = getTimer();
-//				_startPosition = position;
-				intervalId = setInterval( finish, countdown );
+				listenFinish();
 				_paused = false;
 			}
 		}
@@ -142,6 +138,11 @@ package cn.chinuy.utils {
 				clearInterval( intervalId );
 				_running = _paused = false;
 			}
+		}
+		
+		private function listenFinish() : void {
+			if( value > 0 && value != Infinity )
+				intervalId = setInterval( finish, countdown );
 		}
 		
 		private function finish() : void {

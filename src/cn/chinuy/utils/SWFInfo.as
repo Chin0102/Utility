@@ -46,8 +46,8 @@ package cn.chinuy.utils {
 			return toBoolean( _flashvars[ key ], defaultVar );
 		}
 		
-		public function numberVar( key : String, defaultVar : Number = NaN ) : Number {
-			return toNumber( _flashvars[ key ], defaultVar );
+		public function numberVar( key : String, defaultVar : Number = NaN, checkNull : Boolean = false ) : Number {
+			return toNumber( _flashvars[ key ], defaultVar, checkNull );
 		}
 		
 		public function get flashvars() : Object {

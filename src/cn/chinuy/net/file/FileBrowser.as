@@ -62,11 +62,16 @@ package cn.chinuy.net.file {
 				var typeArr : Array = String( FileFilter( _fileFilters[ i ]).extension ).split( ";" );
 				for( var j : int = 0; j < typeArr.length; j++ ) {
 					var type : String = String( typeArr[ j ]).slice( 2 ).toLowerCase();
-					if( type == ft )
+					if( type == ft ) {
+						onCheck( file, FileFilter( _fileFilters[ i ]).description );
 						return true;
+					}
 				}
 			}
 			return false;
+		}
+		
+		protected function onCheck( file : FileReference, description : String ) : void {
 		}
 		
 		public function get multi() : Boolean {
