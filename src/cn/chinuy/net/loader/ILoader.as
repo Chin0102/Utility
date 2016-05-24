@@ -5,6 +5,9 @@ package cn.chinuy.net.loader {
 	 * @author Chin
 	 */
 	public interface ILoader extends IEventDispatcher {
+		
+		function get url() : String;
+		
 		function set url( u : String ) : void;
 		
 		function set method( m : String ) : void;

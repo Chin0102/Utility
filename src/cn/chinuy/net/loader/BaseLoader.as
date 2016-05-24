@@ -26,13 +26,17 @@ package cn.chinuy.net.loader {
 		
 		private var timeoutTimer : Timer;
 		
+		// !valid && !loading = 失败或未加载
+		// !valid && loading = 加载中
+		// valid && !loading = 加载成功
 		public function BaseLoader() {
 			super();
 		}
 		
-		// !valid && !loading = 失败或未加载
-		// !valid && loading = 加载中
-		// valid && !loading = 加载成功
+		public function get url() : String {
+			return _request.url;
+		}
+		
 		public function set url( u : String ) : void {
 			_request.url = u;
 		}
