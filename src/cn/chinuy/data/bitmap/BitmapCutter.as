@@ -17,6 +17,24 @@ package cn.chinuy.data.bitmap {
 	[Event( name = "verifyError", type = "flash.events.IOErrorEvent" )]
 	public class BitmapCutter extends BaseLoader {
 		
+		private static var pool : Object = {};
+		
+		public static function instance( url : String ) : BitmapCutter {
+			var cutter : BitmapCutter = pool[ url ];
+			if( cutter == null ) {
+				cutter = pool[ url ] = new BitmapCutter( url );
+			}
+			return cutter;
+		}
+		
+		public static function destroy( url : String ) : void {
+			var cutter : BitmapCutter = pool[ url ];
+			if( cutter != null ) {
+				cutter.unload();
+				delete pool[ url ];
+			}
+		}
+		
 		private var w : int;
 		private var h : int;
 		protected var loaderContext : LoaderContext = new LoaderContext( true );
@@ -24,8 +42,9 @@ package cn.chinuy.data.bitmap {
 		protected var _bitmap : Bitmap;
 		protected var _data : Array;
 		
-		public function BitmapCutter() {
+		public function BitmapCutter( imgURL : String ) {
 			super();
+			url = imgURL;
 		}
 		
 		public function get loader() : Loader {
@@ -45,11 +64,9 @@ package cn.chinuy.data.bitmap {
 			_dispatcher = _loader.contentLoaderInfo;
 		}
 		
-		public function init( w : int, h : int, imgURL : String ) : void {
+		public function init( w : int, h : int ) : void {
 			this.w = w;
 			this.h = h;
-			url = imgURL;
-			load();
 		}
 		
 		override protected function toLoad( request : URLRequest ) : void {
