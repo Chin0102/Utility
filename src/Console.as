@@ -2,7 +2,7 @@ package {
 	import flash.external.ExternalInterface;
 	import flash.utils.getTimer;
 	
-	public class Debug {
+	public class Console {
 		
 		//日志
 		public static function log( ... msg ) : void {
