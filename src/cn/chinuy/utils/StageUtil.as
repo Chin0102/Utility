@@ -64,7 +64,19 @@ package cn.chinuy.utils {
 			if( flag == null ) {
 				return fullScreen( !isFullScreen, allowInput );
 			} else if( flag ) {
-				_stage.displayState = allowInput ? StageDisplayState.FULL_SCREEN_INTERACTIVE : StageDisplayState.FULL_SCREEN;
+				if( allowInput ) {
+					try {
+						_stage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+					} catch( e : Error ) {
+						return fullScreen( flag, false );
+					}
+				} else {
+					try {
+						_stage.displayState = StageDisplayState.FULL_SCREEN;
+					} catch( e : Error ) {
+						return false;
+					}
+				}
 				return isFullScreen;
 			}
 			_stage.displayState = StageDisplayState.NORMAL;

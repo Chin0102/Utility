@@ -97,6 +97,8 @@ package cn.chinuy.utils {
 		}
 		
 		private function checkStrictClick( e : MouseEvent ) : Boolean {
+			if( mouseDownEvent == null )
+				return false;
 			var offsetX : Number = Math.abs( e.localX - mouseDownEvent.localX );
 			var offsetY : Number = Math.abs( e.localY - mouseDownEvent.localY );
 			return offsetX <= 1 && offsetY <= 1;
