@@ -29,7 +29,10 @@ package cn.chinuy.data.url {
 			}
 			var arr : Array = url.split( "?" );
 			_pureUrl = arr.shift();
-			arr = arr.join( "&" ).split( "&" );
+			var param : String = arr.join( "&" );
+			if( isNull( param ))
+				return;
+			arr = param.split( "&" );
 			for( var i : int = 0; i < arr.length; i++ ) {
 				var kv : Array = String( arr[ i ]).split( "=" );
 				_paramKeys.push( kv[ 0 ]);
